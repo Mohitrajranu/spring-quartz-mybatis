@@ -20,7 +20,7 @@ CREATE TABLE `task_schedule_job` (
   `method_name` varchar(255) NOT NULL,
   PRIMARY KEY (`job_id`),
   UNIQUE KEY `name_group` (`job_name`,`job_group`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of task_schedule_job
