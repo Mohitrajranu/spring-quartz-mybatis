@@ -47,12 +47,13 @@ public class JobTaskController {
 		}
 		Object obj = null;
 		try {
-			if (StringUtils.isNotBlank(scheduleJob.getSpringId())) {
-				obj = SpringUtils.getBean(scheduleJob.getSpringId());
-			} else {
+			if (StringUtils.isNotBlank(scheduleJob.getBeanClass())) {
 				Class clazz = Class.forName(scheduleJob.getBeanClass());
 				obj = clazz.newInstance();
 			}
+			else {
+				obj = SpringUtils.getBean(scheduleJob.getSpringId());
+			} 
 		} catch (Exception e) {
 			// do nothing.........
 		}

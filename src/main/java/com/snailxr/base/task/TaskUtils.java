@@ -20,9 +20,7 @@ public class TaskUtils {
 	public static void invokMethod(ScheduleJob scheduleJob) {
 		Object object = null;
 		Class clazz = null;
-		if (StringUtils.isNotBlank(scheduleJob.getSpringId())) {
-			object = SpringUtils.getBean(scheduleJob.getSpringId());
-		} else if (StringUtils.isNotBlank(scheduleJob.getBeanClass())) {
+		  if (StringUtils.isNotBlank(scheduleJob.getBeanClass())) {
 			try {
 				clazz = Class.forName(scheduleJob.getBeanClass());
 				object = clazz.newInstance();
@@ -31,6 +29,8 @@ public class TaskUtils {
 				e.printStackTrace();
 			}
 
+		}else if (StringUtils.isNotBlank(scheduleJob.getSpringId())) {
+			object = SpringUtils.getBean(scheduleJob.getSpringId());
 		}
 		if (object == null) {
 			log.error("scheduleJob name= [" + scheduleJob.getJobName() + "]---------------Not started successfully, please check if it is configured correctly!!!");

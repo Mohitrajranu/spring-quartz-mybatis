@@ -23,11 +23,11 @@ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 	</context:component-scan>
 
 	<bean id="springUtils" class="com.snailxr.base.support.spring.SpringUtils" />
-
-
 		<!-- Introduction of property files -->
-	<context:property-placeholder location="classpath:config.properties" />
-
+	<!-- <context:property-placeholder location="classpath:config.properties" /> -->
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  <property name="locations" value="classpath:config.properties" ></property>
+</bean>
 	<!-- Configure data source -->
 	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">
