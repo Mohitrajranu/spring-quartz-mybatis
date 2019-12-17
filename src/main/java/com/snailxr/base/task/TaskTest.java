@@ -19,9 +19,16 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.snailxr.base.support.PropertyCache;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class TaskTest.
+ * @author Mohit Raj
+ */
 @Component
 //@PropertySource("classpath:config.properties")
 public class TaskTest {
+	
+	/** The log. */
 	public final Logger log = Logger.getLogger(this.getClass());
 	/*@Value("${ds_url}")
 	private String urlstr;
@@ -29,6 +36,9 @@ public class TaskTest {
 	private String remstr;
 	@Value("${ds_schurl}")
 	private String schUrl;*/
+	/**
+	 * Run.
+	 */
 	/*
 	ds_url=http://bizlem.io:8087/GASalesConverter/rest/biz/callGAdataFetch
 ds_schurl=http://bizlem.io:8082/portal/servlet/service/saveFunnel.checkexplorewithflag
@@ -47,6 +57,9 @@ ds_remurl=http://bizlem.io:8082/portal/servlet/service/saveFunnel.SendOtherCateg
 		}
 	}
 
+	/**
+	 * Run 1.
+	 */
 	public void run1() {
 		log.debug(" run1" + (new Date()) );
 		//remstr
@@ -61,6 +74,9 @@ ds_remurl=http://bizlem.io:8082/portal/servlet/service/saveFunnel.SendOtherCateg
 		}
 	}
 	
+	/**
+	 * Test schedule.
+	 */
 	public void testSchedule() {
 		log.debug(" testSchedule" + (new Date()) );
         String res= null;
@@ -73,6 +89,9 @@ ds_remurl=http://bizlem.io:8082/portal/servlet/service/saveFunnel.SendOtherCateg
 		}
 	}
 	
+	/**
+	 * Test schedule 1.
+	 */
 	public void testSchedule1() {
 		log.debug(" testSchedule1" + (new Date()) );
         String res= null;
@@ -84,8 +103,31 @@ ds_remurl=http://bizlem.io:8082/portal/servlet/service/saveFunnel.SendOtherCateg
 			e.printStackTrace();
 		}
 	}
+	
+	//ds_readMailurl
 
-	 public String callScheduler(String gaUrl) {
+	/**
+	 * Read mail schedule.
+	 */
+	public void readMailSchedule() {
+		log.debug(" readMailSchedule" + (new Date()) );
+        String res= null;
+		try {
+			res=callScheduler(PropertyCache.getInstance().getValue("ds_readMailurl"));
+			log.debug(" readMailSchedule" + res );
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	 
+ 	/**
+ 	 * Call scheduler.
+ 	 *
+ 	 * @param gaUrl the ga url
+ 	 * @return the string
+ 	 */
+ 	public String callScheduler(String gaUrl) {
 	        StringBuilder response = null;
 	        URL url = null;
 	        HttpURLConnection con = null;
@@ -176,7 +218,10 @@ ds_remurl=http://bizlem.io:8082/portal/servlet/service/saveFunnel.SendOtherCateg
 
 	*/
 
-		public void updateCategory() {
+		/**
+	 * Update category.
+	 */
+	public void updateCategory() {
 			MongoClientURI connectionString = null;
 			MongoClient mongo = null;
 			DB db = null;

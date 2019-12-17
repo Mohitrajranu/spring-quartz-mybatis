@@ -29,32 +29,41 @@ import com.snailxr.base.task.QuartzJobFactoryDisallowConcurrentExecution;
 import com.snailxr.base.task.dao.ScheduleJobMapper;
 import com.snailxr.base.task.domain.ScheduleJob;
 
+// TODO: Auto-generated Javadoc
 /**
- * 
- * @Description: Planning task management
+ * The Class JobTaskService.
+ *
  * @author Mohit Raj
+ * @Description: Planning task management
  * @date 2019-09-09
  */
 @Service
 public class JobTaskService {
+	
+	/** The log. */
 	public final Logger log = Logger.getLogger(this.getClass());
+	
+	/** The scheduler factory bean. */
 	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
 
+	/** The schedule job mapper. */
 	@Autowired
 	private ScheduleJobMapper scheduleJobMapper;
 
 	/**
-	 * getAllJob
-	 * 
-	 * @return
+	 * getAllJob.
+	 *
+	 * @return the all task
 	 */
 	public List<ScheduleJob> getAllTask() {
 		return scheduleJobMapper.getAll();
 	}
 
 	/**
-	 * addJob
+	 * addJob.
+	 *
+	 * @param job the job
 	 */
 	public void addTask(ScheduleJob job) {
 		job.setCreateTime(new Date());
@@ -62,16 +71,21 @@ public class JobTaskService {
 	}
 
 	/**
-	 *Query the job from the database
+	 * Query the job from the database.
+	 *
+	 * @param jobId the job id
+	 * @return the task by id
 	 */
 	public ScheduleJob getTaskById(Long jobId) {
 		return scheduleJobMapper.selectByPrimaryKey(jobId);
 	}
 
 	/**
-	 * Change task status
-	 * 
-	 * @throws SchedulerException
+	 * Change task status.
+	 *
+	 * @param jobId the job id
+	 * @param cmd the cmd
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void changeStatus(Long jobId, String cmd) throws SchedulerException {
 		ScheduleJob job = getTaskById(jobId);
@@ -89,9 +103,11 @@ public class JobTaskService {
 	}
 
 	/**
-	 * Change task cron expression
-	 * 
-	 * @throws SchedulerException
+	 * Change task cron expression.
+	 *
+	 * @param jobId the job id
+	 * @param cron the cron
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void updateCron(Long jobId, String cron) throws SchedulerException {
 		ScheduleJob job = getTaskById(jobId);
@@ -107,10 +123,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * Add task
-	 * 
-	 * @param scheduleJob
-	 * @throws SchedulerException
+	 * Add task.
+	 *
+	 * @param job the job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void addJob(ScheduleJob job) throws SchedulerException {
 		if (job == null || !ScheduleJob.STATUS_RUNNING.equals(job.getJobStatus())) {
@@ -148,6 +164,11 @@ public class JobTaskService {
 		}
 	}
 
+	/**
+	 * Inits the.
+	 *
+	 * @throws Exception the exception
+	 */
 	@PostConstruct
 	public void init() throws Exception {
 
@@ -162,10 +183,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * Get a list of all scheduled tasks
-	 * 
-	 * @return
-	 * @throws SchedulerException
+	 * Get a list of all scheduled tasks.
+	 *
+	 * @return the all job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public List<ScheduleJob> getAllJob() throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -193,10 +214,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * All running jobs
-	 * 
-	 * @return
-	 * @throws SchedulerException
+	 * All running jobs.
+	 *
+	 * @return the running job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public List<ScheduleJob> getRunningJob() throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -223,10 +244,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * Pause a job
-	 * 
-	 * @param scheduleJob
-	 * @throws SchedulerException
+	 * Pause a job.
+	 *
+	 * @param scheduleJob the schedule job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void pauseJob(ScheduleJob scheduleJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -235,10 +256,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * Resume a job
-	 * 
-	 * @param scheduleJob
-	 * @throws SchedulerException
+	 * Resume a job.
+	 *
+	 * @param scheduleJob the schedule job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void resumeJob(ScheduleJob scheduleJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -247,10 +268,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * delete job
-	 * 
-	 * @param scheduleJob
-	 * @throws SchedulerException
+	 * delete job.
+	 *
+	 * @param scheduleJob the schedule job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void deleteJob(ScheduleJob scheduleJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -260,10 +281,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * Execute the job immediately
-	 * 
-	 * @param scheduleJob
-	 * @throws SchedulerException
+	 * Execute the job immediately.
+	 *
+	 * @param scheduleJob the schedule job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void runAJobNow(ScheduleJob scheduleJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -272,10 +293,10 @@ public class JobTaskService {
 	}
 
 	/**
-	 * Update job time expression
-	 * 
-	 * @param scheduleJob
-	 * @throws SchedulerException
+	 * Update job time expression.
+	 *
+	 * @param scheduleJob the schedule job
+	 * @throws SchedulerException the scheduler exception
 	 */
 	public void updateJobCron(ScheduleJob scheduleJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
@@ -291,6 +312,11 @@ public class JobTaskService {
 		scheduler.rescheduleJob(triggerKey, trigger);
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("xxxxx");
 	}

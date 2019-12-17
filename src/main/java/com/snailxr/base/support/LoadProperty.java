@@ -2,12 +2,22 @@ package com.snailxr.base.support;
 
 import java.util.Stack;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class LoadProperty.
+ */
 public class LoadProperty {
 
+	/** The main stack. */
 	public static Stack<String> mainStack = new Stack<String>();
 	
 	//public Stack<String> currentStack;
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 
 		try {
@@ -23,6 +33,9 @@ public class LoadProperty {
 		}
 	}
 
+	/**
+	 * Load urls.
+	 */
 	public static void loadUrls(){
 		String key=PropertyCache.getInstance().getValue("ds_url");
 		mainStack.push(key);

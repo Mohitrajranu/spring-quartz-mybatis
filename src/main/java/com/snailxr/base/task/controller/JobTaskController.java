@@ -19,14 +19,28 @@ import com.snailxr.base.support.spring.SpringUtils;
 import com.snailxr.base.task.domain.ScheduleJob;
 import com.snailxr.base.task.service.JobTaskService;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class JobTaskController.
+ */
 @Controller
 @RequestMapping("/task")
 public class JobTaskController {
+	
+	/** The log. */
 	// Logger
 	public final Logger log = Logger.getLogger(this.getClass());
+	
+	/** The task service. */
 	@Autowired
 	private JobTaskService taskService;
 
+	/**
+	 * Task list.
+	 *
+	 * @param request the request
+	 * @return the string
+	 */
 	@RequestMapping("taskList")
 	public String taskList(HttpServletRequest request) {
 		List<ScheduleJob> taskList = taskService.getAllTask();
@@ -34,6 +48,13 @@ public class JobTaskController {
 		return "base/task/taskList";
 	}
 
+	/**
+	 * Task list.
+	 *
+	 * @param request the request
+	 * @param scheduleJob the schedule job
+	 * @return the ret obj
+	 */
 	@RequestMapping("add")
 	@ResponseBody
 	public RetObj taskList(HttpServletRequest request, ScheduleJob scheduleJob) {
@@ -86,6 +107,14 @@ public class JobTaskController {
 		return retObj;
 	}
 
+	/**
+	 * Change job status.
+	 *
+	 * @param request the request
+	 * @param jobId the job id
+	 * @param cmd the cmd
+	 * @return the ret obj
+	 */
 	@RequestMapping("changeJobStatus")
 	@ResponseBody
 	public RetObj changeJobStatus(HttpServletRequest request, Long jobId, String cmd) {
@@ -102,6 +131,14 @@ public class JobTaskController {
 		return retObj;
 	}
 
+	/**
+	 * Update cron.
+	 *
+	 * @param request the request
+	 * @param jobId the job id
+	 * @param cron the cron
+	 * @return the ret obj
+	 */
 	@RequestMapping("updateCron")
 	@ResponseBody
 	public RetObj updateCron(HttpServletRequest request, Long jobId, String cron) {

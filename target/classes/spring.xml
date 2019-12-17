@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.springframework.org/schema/task
+http://www.springframework.org/schema/task/spring-task-3.0.xsd
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+http://www.springframework.org/schema/aop 
+http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+">
+	<context:component-scan base-package="com.snailxr.base">
+	<!-- base-package 
+			If multiple, separate with "," -->
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<bean id="springUtils" class="com.snailxr.base.support.spring.SpringUtils" />
+		<!-- Introduction of property files -->
+	<!-- <context:property-placeholder location="classpath:config.properties" /> -->
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  <property name="locations" value="classpath:config.properties" ></property>
+</bean>
+	<!-- Configure data source -->
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc_url}" />
+		<property name="username" value="${jdbc_username}" />
+		<property name="password" value="${jdbc_password}" />
+
+		<!-- Initialize connection size -->
+		<property name="initialSize" value="5" />
+		<!-- Maximum number of connections used in the connection pool -->
+		<property name="maxActive" value="50" />
+		<!-- Maximum idle connection pool This parameter is deprecated -->
+		<!-- property name="maxIdle" value="20" / -->
+		<!-- Connection pool minimum idle -->
+		<property name="minIdle" value="1" />
+		<!-- Get the maximum waiting time for the connection -->
+		<property name="maxWait" value="60000" />
+
+		<!-- <property name="poolPreparedStatements" value="true" /> <property 
+			name="maxPoolPreparedStatementPerConnectionSize" value="33" /> -->
+
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+
+		<!-- How long does it take to detect the interval and detect the idle connection that needs to be closed, in milliseconds -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- Configure the minimum lifetime of a connection in the pool, in milliseconds -->
+		<property name="minEvictableIdleTimeMillis" value="25200000" />
+
+		<!-- Open removeAbandoned function -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 1800 seconds, which is 30 minutes -->
+		<property name="removeAbandonedTimeout" value="1800" />
+		<!-- Output error log when closing the abanded connection -->
+		<property name="logAbandoned" value="true" />
+
+		<!-- Monitoring database -->
+		<!-- <property name="filters" value="stat" /> -->
+		<property name="filters" value="mergeStat,wall" />
+	</bean>
+	
+
+	<!-- myBatis file -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:MyBatisConfiguration.xml" />
+		<!-- Automatically scan the entity directory, save the manual configuration in Configuration.xml -->
+		<property name="mapperLocations" value="classpath:ScheduleJobMapper.xml"/>
+		<!-- <property name="mapperLocations">
+			<list>
+				<value>classpath:com/snailxr/base/**/*.xml</value>
+			</list>
+		</property> -->
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.snailxr.base.**.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+	<bean id="transactionManager" name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+<bean id="schedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false">
+		<property name="autoStartup" value="true"/> 
+<property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+<property name="waitForJobsToCompleteOnShutdown" value="true"/>
+<property name="overwriteExistingJobs" value="true"/>
+<property name="dataSource">
+    <ref bean="dataSource"/>
+</property>
+<property name="transactionManager">
+    <ref bean="transactionManager"/>
+</property>
+<property name="quartzProperties">
+    <props>
+        <!-- Job store -->
+        <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+        <prop key="org.quartz.scheduler.makeSchedulerThreadDaemon">true</prop>
+        <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+        <prop key="org.quartz.threadPool.makeThreadsDaemons">true</prop>
+        <prop key="org.quartz.threadPool.threadCount">20</prop>
+        <prop key="org.quartz.jobStore.misfireThreshold">25000</prop>
+        <prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+        <prop key="org.quartz.jobStore.driverDelegateClass">org.quartz.impl.jdbcjobstore.StdJDBCDelegate</prop>
+        <prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
+        
+        <prop key="org.quartz.jobStore.isClustered">false</prop>
+        <prop key="org.quartz.jobStore.clusterCheckinInterval">20000</prop>
+ 
+        <prop key="org.quartz.scheduler.instanceName">ClusteredScheduler</prop>
+        
+        <prop key="org.quartz.scheduler.jmx.export">true</prop>
+        
+    </props>
+</property>
+</bean>
+
+
+
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="transactionPointcut"
+			expression="execution(* com.snailxr.base.**.service.*.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut"
+			advice-ref="transactionAdvice" />
+	</aop:config>
+</beans>
